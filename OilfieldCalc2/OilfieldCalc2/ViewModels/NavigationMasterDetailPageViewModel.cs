@@ -91,7 +91,7 @@ namespace OilfieldCalc2.ViewModels
             MenuItems.Add(new MyMenuItem()
             {
                 Icon = (string)Application.Current.Resources["SettingsIcon"],
-                PageName = nameof(SettingsPage),
+                PageName = nameof(AppSettingsPage),
                 Title = "Settings",
                 IsEnabled = true
             });

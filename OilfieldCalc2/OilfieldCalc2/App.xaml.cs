@@ -40,7 +40,10 @@ namespace OilfieldCalc2
 
             containerRegistry.RegisterSingleton<IDataService, DataService>();
 
-            containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
-        }        
+            containerRegistry.RegisterForNavigation<SettingsUnitPage, SettingsUnitPageViewModel>();
+            containerRegistry.RegisterForNavigation<AppSettingsPage, AppSettingsPageViewModel>();
+            containerRegistry.RegisterForNavigation<SettingsAdvancedPage, SettingsAdvancedPageViewModel>();
+            containerRegistry.RegisterForNavigation<SettingsAboutPage, SettingsAboutPageViewModel>();
+        }
     }
 }

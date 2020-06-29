@@ -13,7 +13,7 @@ using Xamarin.Forms;
 
 namespace OilfieldCalc2.ViewModels
 {
-    public class SettingsPageViewModel : ViewModelBase
+    public class SettingsUnitPageViewModel : ViewModelBase
     {
         readonly INavigationService _navigationService;
         readonly IDataService _dataService;
@@ -136,7 +136,7 @@ namespace OilfieldCalc2.ViewModels
             }
         }
 
-        public SettingsPageViewModel(INavigationService navigationService, IDataService dataService) : base(navigationService)
+        public SettingsUnitPageViewModel(INavigationService navigationService, IDataService dataService) : base(navigationService)
         {
             _navigationService = navigationService;
             _dataService = dataService;

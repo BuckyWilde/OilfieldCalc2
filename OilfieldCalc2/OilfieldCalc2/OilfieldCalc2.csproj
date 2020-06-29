@@ -22,12 +22,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Constants.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\SettingsUnitPage.xaml.cs">
+      <DependentUpon>SettingsUnitPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\Constants.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Constants.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\AppSettingsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\DrillstringDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -38,7 +44,13 @@
     <EmbeddedResource Update="Views\NavigationMasterDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\SettingsPage.xaml">
+    <EmbeddedResource Update="Views\SettingsAboutPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SettingsAdvancedPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SettingsUnitPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ViewPageTemplate.xaml">

@@ -2,9 +2,9 @@
 
 namespace OilfieldCalc2.Views
 {
-    public partial class SettingsPage : ContentPage
+    public partial class SettingsUnitPage : ContentPage
     {
-        public SettingsPage()
+        public SettingsUnitPage()
         {
             InitializeComponent();
         }

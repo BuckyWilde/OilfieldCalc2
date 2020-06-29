@@ -160,7 +160,6 @@ namespace OilfieldCalc2.Services
                 "ItemDescription is NULL or " +
                 "ItemSortOrder is NULL").ConfigureAwait(false);
             
-            //TODO: fix sort order values
             foreach(T badr in badRecords)
             {
                 await database.DeleteAsync<T>(badr.ItemId).ConfigureAwait(false);

@@ -2,11 +2,10 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
-             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:viewTemplate="clr-namespace:OilfieldCalc2.Views"
-             Title="{Binding Title}"
-             x:Class="OilfieldCalc2.Views.SettingsPage">
+             x:Class="OilfieldCalc2.Views.SettingsAboutPage"
+             Title="{Binding Title}">
     
     <viewTemplate:ViewPageTemplate>
         <viewTemplate:ViewPageTemplate.Header>
@@ -18,12 +17,12 @@
                     </Grid.ColumnDefinitions>
                     <!--Header Left-->
                     <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalOptions="StartAndExpand">
-                        
+
                     </StackLayout>
 
                     <!--Header Right-->
                     <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalOptions="End">
-                        
+
                     </StackLayout>
                 </Grid>
             </StackLayout>
@@ -32,34 +31,7 @@
         <viewTemplate:ViewPageTemplate.Body>
             <!--******************Main Content area******************-->
             <StackLayout Orientation="Vertical">
-                <Label Text="Units of measure" FontSize="Large"/>
-                
-                <Label Text="Large Length Units" />
-                <Picker ItemsSource="{Binding LongLengthUnits}"
-                        ItemDisplayBinding="{Binding UnitName}"
-                        SelectedItem="{Binding SelectedLongLengthUnit, Mode=TwoWay}">
-                </Picker>
-
-                <Label Text="Small Length Unit"/>
-                <Picker ItemsSource="{Binding ShortLengthUnits}"
-                        ItemDisplayBinding="{Binding UnitName}"
-                        SelectedItem="{Binding SelectedShortLengthUnit, Mode=TwoWay}"/>
-
-                <Label Text="Volume Unit"/>
-                <Picker ItemsSource="{Binding VolumeUnits}"
-                        ItemDisplayBinding="{Binding UnitName}"
-                        SelectedItem="{Binding SelectedVolumeUnit, Mode=TwoWay}"/>
-
-                <Label Text="Capacity Unit"/>
-                <Picker ItemsSource="{Binding CapacityUnits}"
-                        ItemDisplayBinding="{Binding UnitName}"
-                        SelectedItem="{Binding SelectedCapacityUnit, Mode=TwoWay}"/>
-
-                <Label Text="Mass Unit"/>
-                <Picker ItemsSource="{Binding MassUnits}"
-                        ItemDisplayBinding="{Binding UnitName}"
-                        SelectedItem="{Binding SelectedMassUnit, Mode=TwoWay}"/>
-
+                <Label Text="About this program" FontSize="Large"/>
             </StackLayout>
         </viewTemplate:ViewPageTemplate.Body>
 
@@ -72,12 +44,12 @@
                     </Grid.ColumnDefinitions>
                     <!--Footer Left-->
                     <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="0" HorizontalOptions="Start">
-                        
+
                     </StackLayout>
 
                     <!--Footer Right-->
                     <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="1" HorizontalOptions="Start">
-                        
+
                     </StackLayout>
                 </Grid>
             </StackLayout>
