@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:prismNav="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms"
+             xmlns:models="clr-namespace:OilfieldCalc2.Models.DrillstringTubulars"
+             xmlns:behaviors="clr-namespace:OilfieldCalc2.Behaviors"
+             xmlns:converters="clr-namespace:OilfieldCalc2.Converters"
+             xmlns:customControl="clr-namespace:OilfieldCalc2.CustomControls"
+             xmlns:viewTemplate="clr-namespace:OilfieldCalc2.Views"
+             Title="{Binding Title}"
+             x:Class="OilfieldCalc2.Views.DrillstringDetailPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IntEnumConverter x:Key="IntEnum"/>
+            <converters:StringToDoubleConverter x:Key="StringToDouble"/>
+            <Style TargetType="Entry">
+                <Setter Property="Keyboard" Value="Numeric"/>
+                <Setter Property="ClearButtonVisibility" Value="WhileEditing"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding OnSaveCommand}" 
+                     Text="Save"
+                     Order="Primary"
+                     Priority="0">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+                                 Glyph="{StaticResource SaveIcon}"
+                                 Color="Black"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+        <ToolbarItem Command="{prism:GoBack}" 
+                     Text="Cancel"
+                     Order="Primary"
+                     Priority="1">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+                                 Glyph="{StaticResource CancelIcon}"
+                                 Color="Black"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <viewTemplate:ViewPageTemplate>
+        <viewTemplate:ViewPageTemplate.Header>
+            <StackLayout>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Header Left-->
+                    <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalOptions="StartAndExpand">
+                    </StackLayout>
+
+                    <!--Header Right-->
+                    <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalOptions="End">
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+        </viewTemplate:ViewPageTemplate.Header>
+
+        <viewTemplate:ViewPageTemplate.Body>
+            <!--******************Main Content area******************-->
+            <StackLayout Orientation="Vertical">
+                <Picker Title="Item Description"
+                        ItemsSource="{Binding ItemDescriptionTypes}"
+                        SelectedIndex="{Binding SelectedTubularType, Converter={StaticResource IntEnum}}">
+                </Picker>
+                <Label Text="Item Length"/>
+                <customControl:HighlightedEntry Text="{Binding TubularLength.Value, Converter={StaticResource StringToDouble}}">
+                    <Entry.Behaviors>
+                        <behaviors:NumericValidationBehavior/>
+                    </Entry.Behaviors>
+                </customControl:HighlightedEntry>
+                <Label Text="Outside Diameter"/>
+                <customControl:HighlightedEntry Text="{Binding TubularOD.Value, Converter={StaticResource StringToDouble}}">
+                    <Entry.Behaviors>
+                        <behaviors:NumericValidationBehavior/>
+                    </Entry.Behaviors>
+                </customControl:HighlightedEntry>
+                <Label Text="Inside Diameter"/>
+                <customControl:HighlightedEntry Text="{Binding TubularID.Value, Converter={StaticResource StringToDouble}}">
+                    <Entry.Behaviors>
+                        <behaviors:NumericValidationBehavior/>
+                    </Entry.Behaviors>
+                </customControl:HighlightedEntry>
+                <Label Text="Adjusted Weight"/>
+                <customControl:HighlightedEntry Text="{Binding TubularAdjustedWeight.Value, Converter={StaticResource StringToDouble}}">
+                    <Entry.Behaviors>
+                        <behaviors:NumericValidationBehavior/>
+                    </Entry.Behaviors>
+                </customControl:HighlightedEntry>
+            </StackLayout>
+        </viewTemplate:ViewPageTemplate.Body>
+
+        <viewTemplate:ViewPageTemplate.Footer>
+            <StackLayout>
+            </StackLayout>
+        </viewTemplate:ViewPageTemplate.Footer>
+    </viewTemplate:ViewPageTemplate>
+</ContentPage>

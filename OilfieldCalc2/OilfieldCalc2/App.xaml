@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms"
+             x:Class="OilfieldCalc2.App">
+    <Application.Resources>
+        <OnPlatform x:Key="MaterialFontFamily" x:TypeArguments="x:String">
+            <On Platform="iOS" Value="Material Design Icons" />
+            <On Platform="Android" Value="materialdesignicons-webfont.ttf#Material Design Icons" />
+            <On Platform="UWP" Value="Assets/Fonts/materialdesignicons-webfont.ttf#Material Design Icons" />
+        </OnPlatform>
+        <x:String x:Key="PlusIcon">&#x000f1143;</x:String>
+        <x:String x:Key="HomeIcon">&#x000f02dc;</x:String>
+        <x:String x:Key="SettingsIcon">&#x000f05b7;</x:String>
+        <x:String x:Key="CalculatorIcon">&#x000f00ec;</x:String>
+        <x:String x:Key="MoreIcon">&#x000f136c;</x:String>
+        <x:String x:Key="TrashIcon">&#x000f0a7a;</x:String>
+        <x:String x:Key="EditIcon">&#x000f11e8;</x:String>
+        <x:String x:Key="UpArrowIcon">&#x000f005d;</x:String>
+        <x:String x:Key="DownArrowIcon">&#x000f0045;</x:String>
+        <x:String x:Key="SaveIcon">&#x000f0193;</x:String>
+        <x:String x:Key="CancelIcon">&#x000f0156;</x:String>
+    </Application.Resources>
+</prism:PrismApplication>

@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:prismNav="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms"
+             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:models="clr-namespace:OilfieldCalc2.Models.DrillstringTubulars"             
+             xmlns:viewTemplate="clr-namespace:OilfieldCalc2.Views"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Name="ListPage"
+             x:Class="OilfieldCalc2.Views.DrillstringListPage"
+             Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{prismNav:NavigateTo DrillstringDetailPage}"
+                     Text="Add"
+                     Order="Primary"
+                     Priority="0">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+                                 Glyph="{StaticResource PlusIcon}"
+                                 Color="Black"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <viewTemplate:ViewPageTemplate>
+        <viewTemplate:ViewPageTemplate.Header>
+            <StackLayout>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Header Left-->
+                    <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalOptions="StartAndExpand">
+                        <Label Text="Bit depth: " VerticalOptions="Center" Margin="10,0,0,0" />
+                        <Entry Text="{Binding TotalTubularLength, StringFormat='{0:F2}'}" VerticalOptions="Center" HorizontalOptions="Fill" WidthRequest="100">
+                            <Entry.Behaviors>
+                                <b:EventToCommandBehavior EventName="TextChanged" Command="{Binding OnBitDepthChangedCommand}" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label Text="{Binding LongLengthUnit.UnitName}" VerticalOptions="Center" />
+                    </StackLayout>
+
+                    <!--Header Right-->
+                    <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalOptions="End">
+                        <Label Text="Bit on bottom " VerticalOptions="Center" />
+                        <Switch x:Name="BitOnBottomSwitch" IsToggled="{Binding BitOnBottomToggle}" HorizontalOptions="End">
+                            <Switch.Behaviors>
+                                <b:EventToCommandBehavior EventName="Toggled" Command="{Binding OnBitOnBottomToggledCommand}" />
+                            </Switch.Behaviors>
+                        </Switch>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+        </viewTemplate:ViewPageTemplate.Header>
+
+        <viewTemplate:ViewPageTemplate.Body>
+            <!--******************Main Content area******************-->
+            <StackLayout Orientation="Vertical">
+                <ListView ItemsSource="{Binding DrillstringTubulars}" x:Name="Template">
+                    <ListView.Behaviors>
+                        <b:EventToCommandBehavior EventName="ItemTapped"
+                                      Command="{Binding OnItemTappedCommand}"
+                                      EventArgsParameterPath="Item" />
+                    </ListView.Behaviors>
+
+                    <!--Header for the listview columns-->
+                    <ListView.Header>
+                        <Grid RowSpacing="0" BackgroundColor="#e8e8e8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <BoxView Grid.Column="0" Grid.ColumnSpan="4" BackgroundColor="WhiteSmoke" Margin="0,0,0,5" />
+                            <Label Text="{Binding LongLengthUnit.Abreviation, StringFormat='Length ({0})'}" Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center" />
+                            <Label Text="{Binding ShortLengthUnit.Abreviation, StringFormat='OD ({0})'}" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" />
+                            <Label Text="{Binding ShortLengthUnit.Abreviation, StringFormat='ID ({0})'}" Grid.Column="2" HorizontalOptions="End" Margin="0,0,10,0" VerticalOptions="Center" />
+                        </Grid>
+                    </ListView.Header>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:DrillstringTubularBase">
+                            <ViewCell>
+                                <Grid RowSpacing="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Label Text="{Binding ItemDescription}"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="3"
+                                       VerticalTextAlignment="Center"
+                                       FontSize="Small"
+                                       FontAttributes="Bold"
+                                       Margin="10,0,0,0" />
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="End" Grid.Row="1" Grid.Column="0" Margin="20,0,0,0">
+                                        <Label Text="{Binding Length.Value, StringFormat='{0:F2}', Mode=TwoWay}" VerticalTextAlignment="Center" FontSize="Micro" />
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="End" Grid.Row="1" Grid.Column="1">
+                                        <Label Text="{Binding OutsideDiameter.Value, StringFormat='{0:F3}'}" VerticalTextAlignment="Center" FontSize="Micro" />
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="End" Grid.Row="1" Grid.Column="2">
+                                        <Label Text="{Binding InsideDiameter.Value, StringFormat='{0:F3}'}" VerticalTextAlignment="Center" FontSize="Micro" />
+                                    </StackLayout>
+
+                                    <StackLayout Grid.Column="3" Grid.RowSpan="2" HorizontalOptions="End" Orientation="Horizontal" Padding="0,0,20,0">
+                                        <!--Sort order buttons go here-->
+                                        <Button FontFamily="{StaticResource MaterialFontFamily}"
+                                                Text="{StaticResource UpArrowIcon}"
+                                                WidthRequest="30"
+                                                HeightRequest="30"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="End"
+                                                Command="{Binding BindingContext.OnUpCommand, Source={x:Reference ListPage}}"
+                                                CommandParameter="{Binding .}"/>
+
+                                        <Button FontFamily="{StaticResource MaterialFontFamily}"
+                                                Text="{StaticResource DownArrowIcon}"
+                                                WidthRequest="30"
+                                                HeightRequest="30"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="End"
+                                                Command="{Binding BindingContext.OnDownCommand, Source={x:Reference ListPage}}"
+                                                CommandParameter="{Binding .}"/>
+                                    </StackLayout>
+                                </Grid>
+                                <ViewCell.ContextActions>
+
+                                    <!--This Command works in the viewmodel-->
+                                    <MenuItem Command="{Binding BindingContext.OnDeleteCommand, Source={x:Reference ListPage}}"
+                                              CommandParameter="{Binding .}" Text="Delete" IsDestructive="True">
+                                        <MenuItem.IconImageSource>
+                                            <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+                                                             Glyph="{StaticResource TrashIcon}"
+                                                             Color="White"/>
+                                        </MenuItem.IconImageSource>
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding BindingContext.OnEditCommand, Source={x:Reference ListPage}}"
+                                              CommandParameter="{Binding .}" Text="Edit" IsDestructive="False">
+                                        <MenuItem.IconImageSource>
+                                            <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+                                                             Glyph="{StaticResource EditIcon}"
+                                                             Color="White"/>
+                                        </MenuItem.IconImageSource>
+                                    </MenuItem>
+                                </ViewCell.ContextActions>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+        </viewTemplate:ViewPageTemplate.Body>
+
+        <viewTemplate:ViewPageTemplate.Footer>
+            <StackLayout>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Footer Left-->
+                    <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="0" HorizontalOptions="Start">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding TotalVolume, StringFormat='Total Capacity = {0:F2} '}" VerticalOptions="Center" />
+                            <Label Text="{Binding VolumeUnit.Abreviation}" VerticalOptions="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding TotalDisplacement, StringFormat='Total Disp = {0:F2} '}" />
+                            <Label Text="{Binding VolumeUnit.Abreviation}" VerticalOptions="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding TotalWeight, StringFormat='Total Weight = {0:F2} '}" />
+                            <Label Text="{Binding MassUnit.Abreviation}" VerticalOptions="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+
+                    <!--Footer Right-->
+                    <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="1" HorizontalOptions="Start">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding CurrentItemLength, StringFormat='Item Length = {0:F2} '}" />
+                            <Label Text="{Binding LongLengthUnit.Abreviation}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding CurrentItemCapacity, StringFormat='Item Cap = {0:F4} '}" />
+                            <Label Text="{Binding CapacityUnit.Abreviation}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding CurrentItemVolume, StringFormat='Total Item Cap = {0:F2} '}" />
+                            <Label Text="{Binding VolumeUnit.Abreviation}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding CurrentItemDisplacement, StringFormat='Item Disp = {0:F4} '}" />
+                            <Label Text="{Binding CapacityUnit.Abreviation}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding CurrentItemTotalDisplacement, StringFormat='Total Item Disp = {0:F2} '}" />
+                            <Label Text="{Binding VolumeUnit.Abreviation}"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+        </viewTemplate:ViewPageTemplate.Footer>
+    </viewTemplate:ViewPageTemplate>
+
+</ContentPage>

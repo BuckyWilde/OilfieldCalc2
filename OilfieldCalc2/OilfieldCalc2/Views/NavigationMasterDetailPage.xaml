@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:prism="http://prismlibrary.com"
+                  xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+                  prism:ViewModelLocator.AutowireViewModel="True"
+                  xmlns:converters="clr-namespace:OilfieldCalc2.Converters"
+                  xmlns:models="clr-namespace:OilfieldCalc2.Models"
+                  MasterBehavior="Popover"
+                  x:Name="myMenuPage"
+                  x:Class="OilfieldCalc2.Views.NavigationMasterDetailPage">
+    
+    <MasterDetailPage.Resources>
+        <converters:BoolToColorConverter x:Key="ColorConverter"/>
+    </MasterDetailPage.Resources>
+    
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu">
+            <Grid BackgroundColor="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Label Text="Wellbore Calculations" />
+                </Grid>
+                <StackLayout Margin="20,20,20,0" Grid.Row="1" Spacing="15">
+                    <ListView RowHeight="60" 
+                              SeparatorVisibility="Default" 
+                              SeparatorColor="LightGray" 
+                              BackgroundColor="#e8e8e8" 
+                              SelectionMode="Single"
+                              IsPullToRefreshEnabled="False"
+                              ItemsSource="{Binding MenuItems}" 
+                              SelectedItem="{Binding SelectedMenuItem}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:MyMenuItem">
+                                <ViewCell>
+                                    <StackLayout VerticalOptions="FillAndExpand" 
+                                                 Orientation="Horizontal" 
+                                                 Padding="20,10,0,10" 
+                                                 Spacing="20">
+                                        <Image WidthRequest="30" 
+                                               HeightRequest="30" 
+                                               VerticalOptions="Center">
+                                            <Image.Source>
+                                                <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+                                                                 Glyph="{x:Binding Icon}"
+                                                                 Color="Black"/>
+                                            </Image.Source>
+                                        </Image>
+                                        <Label Text="{x:Binding Title}" 
+                                               FontSize="Medium" 
+                                               x:Name="label"
+                                               VerticalOptions="Start" >
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{x:Binding IsEnabled}" Value="True">
+                                                    <Setter Property="TextColor" Value="Black"/>
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{x:Binding IsEnabled}" Value="False">
+                                                    <Setter Property="TextColor" Value="LightGray"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Behaviors>
+                            <b:EventToCommandBehavior EventName="ItemTapped" Command="{Binding OnNavigateCommand}" />
+                        </ListView.Behaviors>
+                    </ListView>
+                </StackLayout>
+            </Grid>
+        </ContentPage>
+    </MasterDetailPage.Master>
+    
+</MasterDetailPage>
