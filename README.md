@@ -8,4 +8,4 @@ component of the drillstring or total displacements as required.
 User can change units of measure to meet their requirements. New units can easily be added by the programmer.
 
 ***FUTURE PLANS***
-Add the ability to generate well control schedules for Driller's Step one well control method
+Add the ability to generate well control schedules for Driller's Step one well control method and perhaps more...
