@@ -31,27 +31,14 @@
         <viewTemplate:ViewPageTemplate.Body>
             <!--******************Main Content area******************-->
             <StackLayout Orientation="Vertical">
-                <Label Text="Advance Settings" FontSize="Large"/>
+                <Label Text="Advance Options" FontSize="Large"/>
+                <Button Text="Clear Data" Command="{Binding OnClearDatabaseCommand}"/>
             </StackLayout>
         </viewTemplate:ViewPageTemplate.Body>
 
         <viewTemplate:ViewPageTemplate.Footer>
             <StackLayout>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <!--Footer Left-->
-                    <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="0" HorizontalOptions="Start">
-
-                    </StackLayout>
-
-                    <!--Footer Right-->
-                    <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="1" HorizontalOptions="Start">
-
-                    </StackLayout>
-                </Grid>
+                <Label Text="WARNING! Changes made here could destroy Data"/>
             </StackLayout>
         </viewTemplate:ViewPageTemplate.Footer>
     </viewTemplate:ViewPageTemplate>

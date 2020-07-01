@@ -386,7 +386,6 @@ namespace OilfieldCalc2.ViewModels
                         Device.BeginInvokeOnMainThread(async () => await _navigationService.NavigateAsync(nameof(MainPage)).ConfigureAwait(false));
                     if (answer)
                     {
-                        //await _dataService.ClearTable<DrillstringTubularBase>().ConfigureAwait(false);
                         bool repaired = await _dataService.RepairTable<DrillstringTubularBase>().ConfigureAwait(false);
                         
                         if (!repaired)

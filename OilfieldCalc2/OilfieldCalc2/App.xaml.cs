@@ -25,7 +25,7 @@ namespace OilfieldCalc2
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationMasterDetailPage/NavigationPage/MainPage");
+            await NavigationService.NavigateAsync("NavigationMasterDetailPage/NavigationPage/MainPage").ConfigureAwait(false);
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

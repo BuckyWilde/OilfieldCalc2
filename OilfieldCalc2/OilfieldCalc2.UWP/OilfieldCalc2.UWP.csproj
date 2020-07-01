@@ -146,7 +146,7 @@
     </PackageReference>
     <PackageReference Include="Prism.DryIoc.Forms" Version="7.2.0.1422" />
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.6.0.967</Version>
+      <Version>4.7.0.968</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
