@@ -6,7 +6,7 @@ using SQLite;
 using System.Linq;
 using OilfieldCalc2.Models.DrillstringTubulars;
 using OilfieldCalc2.Models.WellboreTubulars;
-using SQLiteNetExtensionsAsync.Extensions;
+using SQLiteNetExtensions.Extensions;
 
 namespace OilfieldCalc2.Services
 {
@@ -16,11 +16,11 @@ namespace OilfieldCalc2.Services
     /// </summary>
     public class DataService : IDataService
     {
-        static readonly Lazy<SQLiteAsyncConnection> lazyInitializer = new Lazy<SQLiteAsyncConnection>(() =>
+        static readonly Lazy<SQLiteConnection> lazyInitializer = new Lazy<SQLiteConnection>(() =>
         {
-            return new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
+            return new SQLiteConnection(Constants.DatabasePath, Constants.Flags);
         });
-        static SQLiteAsyncConnection database => lazyInitializer.Value;
+        static SQLiteConnection database => lazyInitializer.Value;
         private static bool initialized = false;
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace OilfieldCalc2.Services
         /// </summary>
         public DataService()
         {
-            InitializeAsync<DrillstringTubularBase>().SafeFireAndForget(false);
-            InitializeAsync<WellboreTubularBase>().SafeFireAndForget(false);
+            Initialize<DrillstringTubularBase>();
+            Initialize<WellboreTubularBase>();
         }
 
         /// <summary>
@@ -37,14 +37,13 @@ namespace OilfieldCalc2.Services
         /// </summary>
         /// <typeparam name="T">Generic representing a database table</typeparam>
         /// <returns></returns>
-        private async Task InitializeAsync<T>()
+        private void Initialize<T>()
         {
             if (!initialized)
             {
                 if (!database.TableMappings.Any(m => m.MappedType.Name == typeof(T).Name))
                 {
-                    await database.EnableWriteAheadLoggingAsync().ConfigureAwait(false);
-                    await database.CreateTablesAsync(CreateFlags.None, typeof(T)).ConfigureAwait(false);
+                    database.CreateTables(CreateFlags.None, typeof(T));
                     initialized = true;
                 }
             }
@@ -55,9 +54,9 @@ namespace OilfieldCalc2.Services
         /// </summary>
         /// <param name="tubular">Tubular item, either wellbore or drillstring</param>
         /// <returns>The number of rows being deleted. This will only delete one record at a time</returns>
-        public async Task<int> DeleteItemAsync(ITubular tubular)
+        public int DeleteItem(ITubular tubular)
         {
-            return await database.DeleteAsync(tubular).ConfigureAwait(false);
+            return database.Delete(tubular);
         }
 
         /// <summary>
@@ -66,11 +65,11 @@ namespace OilfieldCalc2.Services
         /// </summary>
         /// <typeparam name="T">Generic representing a table in the database</typeparam>
         /// <returns>IEnumerable list of table items</returns>
-        public async Task<IEnumerable<T>> GetTubularItemsAsync<T>() where T : ITubular, new()
+        public IEnumerable<T> GetTubularItems<T>() where T : ITubular, new()
         {
             bool areConsecutive = true;
             int count = 0;
-            List<T> tubularList = await database.GetAllWithChildrenAsync<T>(recursive:true).ConfigureAwait(false);
+            List<T> tubularList = database.GetAllWithChildren<T>(recursive: true);
             tubularList.OrderBy(x => x.ItemSortOrder);
             
             //Check to see if ItemSortOrder values are consecutive. Calls method to repair them if not.
@@ -81,8 +80,8 @@ namespace OilfieldCalc2.Services
             }
             if (!areConsecutive)
             {
-                await RepairSort<T>().ConfigureAwait(false);
-                tubularList = await database.GetAllWithChildrenAsync<T>(recursive: true).ConfigureAwait(false);
+                RepairSort<T>();
+                tubularList = database.GetAllWithChildren<T>(recursive: true);
             }
 
             return tubularList.OrderBy(x => x.ItemSortOrder);
@@ -93,7 +92,7 @@ namespace OilfieldCalc2.Services
         /// </summary>
         /// <param name="tubular">Either a wellbore or drillstring tubular object</param>
         /// <returns>1 if sucessful, 0 if no record was saves or updated.</returns>
-        public async Task<int> SaveItemAsync(ITubular tubular)
+        public int SaveItem(ITubular tubular)
         {
             if (tubular != null)
             {
@@ -103,28 +102,28 @@ namespace OilfieldCalc2.Services
                     //Calculate how many records are currently in the database
                     //and make the sort order number one larger!
                     if (tubular is DrillstringTubularBase)
-                        tubular.ItemSortOrder = await database.Table<DrillstringTubularBase>().CountAsync().ConfigureAwait(true) + 1;
+                        tubular.ItemSortOrder = database.Table<DrillstringTubularBase>().Count() + 1;
                     else if (tubular is WellboreTubularBase)
-                        tubular.ItemSortOrder = await database.Table<WellboreTubularBase>().CountAsync().ConfigureAwait(false) + 1;
+                        tubular.ItemSortOrder = database.Table<WellboreTubularBase>().Count() + 1;
                     else
                         throw new System.ArgumentException("Item being saved is neither a drillstring or wellbore tubular", nameof(tubular));
 
                     //Insert a new record
-                    await database.InsertWithChildrenAsync(tubular, recursive:true).ConfigureAwait(false);
+                    database.InsertWithChildren(tubular, recursive: true);
                     return 1;
                 }
 
                 else
                 {
                     //Update an existing record
-                    await database.UpdateWithChildrenAsync(tubular).ConfigureAwait(false);
+                    database.UpdateWithChildren(tubular);
                     return 1;
                 }
             }
             return 0;
         }
 
-        public Task<ITubular> GetItemAsync(int tubularId)
+        public ITubular GetItem(int tubularId)
         {
             throw new NotImplementedException();
         }
@@ -134,9 +133,9 @@ namespace OilfieldCalc2.Services
         /// </summary>
         /// <typeparam name="T">Generic parameter representing a database table</typeparam>
         /// <returns>The number is records deleted</returns>
-        public async Task<int> ClearTable<T>()
+        public int ClearTable<T>()
         {
-            return await database.DeleteAllAsync<T>().ConfigureAwait(true);
+            return database.DeleteAll<T>();
         }
 
         /// <summary>
@@ -144,13 +143,13 @@ namespace OilfieldCalc2.Services
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<bool> RepairTable<T>() where T : ITubular, new()
+        public bool RepairTable<T>() where T : ITubular, new()
         {
             bool worked = false;
 
             //Get a list of data and delete or repair the corrupted values
             //var badRecords = await database.Table<DrillstringTubularBase>().Where(x => x.LengthBlobbed = (DBNull)).ToListAsync().ConfigureAwait(false);
-            List<T> badRecords = await database.QueryAsync<T>
+            List<T> badRecords = database.Query<T>
                 ("SELECT ItemId FROM Drillstring WHERE " +
                 "LengthBlobbed is NULL or " +
                 "IDBlobbed is NULL or " +
@@ -158,16 +157,16 @@ namespace OilfieldCalc2.Services
                 "WeightBlobbed is NULL or " +
                 "TubularType is NULL or " +
                 "ItemDescription is NULL or " +
-                "ItemSortOrder is NULL").ConfigureAwait(false);
+                "ItemSortOrder is NULL");
             
             foreach(T badr in badRecords)
             {
-                await database.DeleteAsync<T>(badr.ItemId).ConfigureAwait(false);
+                database.Delete<T>(badr.ItemId);
                 if (!worked)
                     worked = true;
             }
 
-            await RepairSort<T>().ConfigureAwait(false);
+            RepairSort<T>();
 
             return worked;
         }
@@ -178,41 +177,17 @@ namespace OilfieldCalc2.Services
         /// </summary>
         /// <typeparam name="T">Generic representing a database table</typeparam>
         /// <returns>true when complete</returns>
-        private async Task<bool> RepairSort<T>() where T : ITubular, new()
+        private bool RepairSort<T>() where T : ITubular, new()
         {
-            List<T> tubularList = await database.GetAllWithChildrenAsync<T>(recursive: true).ConfigureAwait(false);
+            List<T> tubularList = database.GetAllWithChildren<T>(recursive: true);
             tubularList.OrderBy(x => x.ItemSortOrder);
             int count = 1;
             foreach (T tubular in tubularList)
             {
                 tubular.ItemSortOrder = count++;
-                await SaveItemAsync(tubular).ConfigureAwait(false);
+                SaveItem(tubular);
             }
             return true;
-        }
-    }
-
-    public static class TaskExtensions
-    {
-        // NOTE: Async void is intentional here. This provides a way
-        // to call an async method from the constructor while
-        // communicating intent to fire and forget, and allow
-        // handling of exceptions
-        public static async void SafeFireAndForget(this Task task,
-            bool returnToCallingContext,
-            Action<Exception> onException = null)
-        {
-            try
-            {
-                await task.ConfigureAwait(returnToCallingContext);
-            }
-
-            // if the provided action is not null, catch and
-            // pass the thrown exception
-            catch (Exception ex) when (onException != null)
-            {
-                onException(ex);
-            }
         }
     }
 }

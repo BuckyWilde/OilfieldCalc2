@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OilfieldCalc2.UWP")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Oilfield Calculator 2")]
+[assembly: AssemblyDescription("Application for well control calculations")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Buck Wilde Enterprises")]
 [assembly: AssemblyProduct("OilfieldCalc2.UWP")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]

@@ -11,18 +11,18 @@ namespace OilfieldCalc2.Services
 {
     public class DummyDataService : IDataService
     {
-        public Task<int> DeleteItemAsync(ITubular tubular)
+        public int DeleteItem(ITubular tubular)
         {
             System.Diagnostics.Debug.WriteLine("Deleting Tubular... " + tubular.ToString());
-            return Task.FromResult(0);
+            return 0;
         }
 
-        public Task<ITubular> GetItemAsync(int tubularId)
+        public ITubular GetItem(int tubularId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ITubular>> GetDrillstringItemsAsync()
+        public IEnumerable<ITubular> GetDrillstringItems()
         {
             //return list of made up items
             List<IDrillstringTubular> tubularList = new List<IDrillstringTubular>();
@@ -53,10 +53,10 @@ namespace OilfieldCalc2.Services
             tubularList.Add(dst1);
 
             //Return the list sorted by the ItemSortOrder field
-            return Task.FromResult((IEnumerable<ITubular>)tubularList.OrderBy(x => x.ItemSortOrder));
+            return tubularList.OrderBy(x => x.ItemSortOrder);
         }
 
-        public Task<IEnumerable<ITubular>> GetWellboreItemsAsync()
+        public IEnumerable<ITubular> GetWellboreItems()
         {
             List<IWellboreTubular> tubularList = new List<IWellboreTubular>();
 
@@ -73,31 +73,31 @@ namespace OilfieldCalc2.Services
             wbt2.InsideDiameter = new Measurement(211d * MeasurementUnitService.GetCurrentShortLengthUnit().ConversionFactor, MeasurementUnitService.GetCurrentShortLengthUnit());
             tubularList.Add(wbt2);
 
-            return Task.FromResult((IEnumerable<ITubular>)tubularList);
+            return tubularList;
         }
 
-        public Task SaveItemAsync(ITubular tubular)
+        public int SaveItem(ITubular tubular)
         {
             System.Diagnostics.Debug.WriteLine("Saving Tubular... " + tubular.ToString());
-            return Task.FromResult(0);
+            return 0;
         }
 
-        public Task<IEnumerable<T>> GetTubularItemsAsync<T>() where T : ITubular, new()
+        public IEnumerable<T> GetTubularItems<T>() where T : ITubular, new()
         {
             throw new NotImplementedException();
         }
 
-        Task<int> IDataService.SaveItemAsync(ITubular tubular)
+        int IDataService.SaveItem(ITubular tubular)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> ClearTable<T>()
+        public int ClearTable<T>()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> RepairTable<T>() where T : ITubular, new()
+        public bool RepairTable<T>() where T : ITubular, new()
         {
             throw new NotImplementedException();
         }

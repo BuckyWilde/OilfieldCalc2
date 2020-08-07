@@ -8,11 +8,11 @@ namespace OilfieldCalc2.Services
 {
     public interface IDataService
     {
-        Task<IEnumerable<T>> GetTubularItemsAsync<T>() where T : ITubular, new();
-        Task<ITubular> GetItemAsync(int tubularId);
-        Task<int> SaveItemAsync(ITubular tubular);
-        Task<int> DeleteItemAsync(ITubular tubular);
-        Task<int> ClearTable<T>();
-        Task<bool> RepairTable<T>() where T : ITubular, new();
+        IEnumerable<T> GetTubularItems<T>() where T : ITubular, new();
+        ITubular GetItem(int tubularId);
+        int SaveItem(ITubular tubular);
+        int DeleteItem(ITubular tubular);
+        int ClearTable<T>();
+        bool RepairTable<T>() where T : ITubular, new();
     }
 }

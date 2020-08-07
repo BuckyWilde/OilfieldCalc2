@@ -40,10 +40,17 @@ namespace OilfieldCalc2.Models.DrillstringTubulars
         {
             get
             {
-                if (this.InsideDiameter != null)
-                    return OilfieldCalc2.Helpers.Capacity.GetInternalCapacity(this.InsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentCapacityUnit().ConversionFactor;
-                else
-                    return -1;
+                try
+                {
+                    if (this.InsideDiameter != null)
+                        return OilfieldCalc2.Helpers.Capacity.GetInternalCapacity(this.InsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentCapacityUnit().ConversionFactor;
+                    else
+                        return -1;
+                }
+                catch (ArgumentException e)
+                {
+                    throw new System.ArgumentException("Database is corrupt", e);
+                }
             }
         }
         
@@ -52,10 +59,17 @@ namespace OilfieldCalc2.Models.DrillstringTubulars
         {
             get
             {
-                if (this.InsideDiameter != null)
-                    return OilfieldCalc2.Helpers.Capacity.GetInternalCapacity(this.InsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentVolumeUnit().ConversionFactor * this.Length.Value;
-                else
-                    return -1;
+                try
+                {
+                    if (this.InsideDiameter != null && this.Length != null)
+                        return OilfieldCalc2.Helpers.Capacity.GetInternalCapacity(this.InsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentVolumeUnit().ConversionFactor * this.Length.Value;
+                    else
+                        return -1;
+                }
+                catch (ArgumentException e)
+                {
+                    throw new System.ArgumentException("Database is corrupt", e);
+                }
             }
         }
 
@@ -64,10 +78,17 @@ namespace OilfieldCalc2.Models.DrillstringTubulars
         {
             get
             {
-                if (this.AdjustedWeightPerUnit != null)
-                    return this.AdjustedWeightPerUnit.MetricValue * this.Length.MetricValue * MeasurementUnitService.GetCurrentMassUnit().ConversionFactor;
-                else
-                    return -1;
+                try
+                {
+                    if (this.AdjustedWeightPerUnit != null && this.Length != null)
+                        return this.AdjustedWeightPerUnit.MetricValue * this.Length.MetricValue * MeasurementUnitService.GetCurrentMassUnit().ConversionFactor;
+                    else
+                        return -1;
+                }
+                catch (ArgumentException e)
+                {
+                    throw new System.ArgumentException("Database is corrupt", e);
+                }
             }
         }
 
@@ -76,10 +97,19 @@ namespace OilfieldCalc2.Models.DrillstringTubulars
         {
             get
             {
-                if (this.OutsideDiameter != null && this.InsideDiameter != null)
-                    return OilfieldCalc2.Helpers.Capacity.GetDryDisplacement(this.OutsideDiameter.MetricValue, this.InsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentCapacityUnit().ConversionFactor;
-                else
-                    return -1;
+                try
+                {
+
+
+                    if (this.OutsideDiameter != null && this.InsideDiameter != null)
+                        return OilfieldCalc2.Helpers.Capacity.GetDryDisplacement(this.OutsideDiameter.MetricValue, this.InsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentCapacityUnit().ConversionFactor;
+                    else
+                        return -1;
+                }
+                catch (ArgumentException e)
+                {
+                    throw new System.ArgumentException("Database is corrupt", e);
+                }
             }
         }
 
@@ -88,10 +118,17 @@ namespace OilfieldCalc2.Models.DrillstringTubulars
         {
             get
             {
-                if (this.OutsideDiameter != null && this.InsideDiameter != null)
-                    return OilfieldCalc2.Helpers.Capacity.GetDryDisplacement(this.OutsideDiameter.MetricValue, this.InsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentVolumeUnit().ConversionFactor * this.Length.Value;
-                else
-                    return -1;
+                try
+                {
+                    if (this.OutsideDiameter != null && this.InsideDiameter != null && this.Length != null)
+                        return OilfieldCalc2.Helpers.Capacity.GetDryDisplacement(this.OutsideDiameter.MetricValue, this.InsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentVolumeUnit().ConversionFactor * this.Length.Value;
+                    else
+                        return -1;
+                }
+                catch (ArgumentException e)
+                {
+                    throw new System.ArgumentException("Database is corrupt", e);
+                }
             }
         }
 
@@ -100,10 +137,17 @@ namespace OilfieldCalc2.Models.DrillstringTubulars
         {
             get
             {
-                if (this.OutsideDiameter != null)
-                    return OilfieldCalc2.Helpers.Capacity.GetWetDisplacement(this.OutsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentCapacityUnit().ConversionFactor;
-                else
-                    return -1;
+                try
+                {
+                    if (this.OutsideDiameter != null)
+                        return OilfieldCalc2.Helpers.Capacity.GetWetDisplacement(this.OutsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentCapacityUnit().ConversionFactor;
+                    else
+                        return -1;
+                }
+                catch (ArgumentException e)
+                {
+                    throw new System.ArgumentException("Database is corrupt", e);
+                }
             }
         }
 
@@ -112,10 +156,17 @@ namespace OilfieldCalc2.Models.DrillstringTubulars
         {
             get
             {
-                if (this.OutsideDiameter != null)
-                    return OilfieldCalc2.Helpers.Capacity.GetWetDisplacement(this.OutsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentVolumeUnit().ConversionFactor * Length.Value;
-                else
-                    return -1;
+                try
+                {
+                    if (this.OutsideDiameter != null)
+                        return OilfieldCalc2.Helpers.Capacity.GetWetDisplacement(this.OutsideDiameter.MetricValue) * MeasurementUnitService.GetCurrentVolumeUnit().ConversionFactor * Length.Value;
+                    else
+                        return -1;
+                }
+                catch (ArgumentException e)
+                {
+                    throw new System.ArgumentException("Database is corrupt", e);
+                }
             }
         }
         

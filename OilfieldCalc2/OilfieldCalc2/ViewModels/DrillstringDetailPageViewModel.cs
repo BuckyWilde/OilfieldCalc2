@@ -116,7 +116,7 @@ namespace OilfieldCalc2.ViewModels
 
             if (pipe != null)
             {
-                await _dataService.SaveItemAsync((DrillstringTubularBase)pipe).ConfigureAwait(true);
+                _dataService.SaveItem((DrillstringTubularBase)pipe);
 
                 await _navigationService.GoBackAsync().ConfigureAwait(false);
             }

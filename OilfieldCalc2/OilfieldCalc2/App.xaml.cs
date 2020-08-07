@@ -24,6 +24,7 @@ namespace OilfieldCalc2
         protected override async void OnInitialized()
         {
             InitializeComponent();
+            Device.SetFlags(new string[] { "Expander_Experimental", "SwipeView_Experimental" });
 
             await NavigationService.NavigateAsync("NavigationMasterDetailPage/NavigationPage/MainPage").ConfigureAwait(false);
         }
@@ -44,6 +45,7 @@ namespace OilfieldCalc2
             containerRegistry.RegisterForNavigation<AppSettingsPage, AppSettingsPageViewModel>();
             containerRegistry.RegisterForNavigation<SettingsAdvancedPage, SettingsAdvancedPageViewModel>();
             containerRegistry.RegisterForNavigation<SettingsAboutPage, SettingsAboutPageViewModel>();
+            containerRegistry.RegisterForNavigation<DrillstringMobileListPage, DrillstringListPageViewModel>();
         }
     }
 }

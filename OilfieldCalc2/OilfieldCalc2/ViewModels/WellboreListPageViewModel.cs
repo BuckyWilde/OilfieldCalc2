@@ -55,11 +55,11 @@ namespace OilfieldCalc2.ViewModels
             Title = "Wellbore List Page";
         }
 
-        public override async void OnNavigatedTo(INavigationParameters parameters)
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedToAsync(parameters);
 
-            WellboreTubulars = new ObservableCollection<ITubular>(await _dataService.GetTubularItemsAsync<WellboreTubularBase>());
+            WellboreTubulars = new ObservableCollection<ITubular>(_dataService.GetTubularItems<WellboreTubularBase>());
         }
     }
 }

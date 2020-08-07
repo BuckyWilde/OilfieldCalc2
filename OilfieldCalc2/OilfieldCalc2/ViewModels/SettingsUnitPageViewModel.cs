@@ -63,7 +63,7 @@ namespace OilfieldCalc2.ViewModels
                                 tubular.Length.Convert(value);
 
                                 //update the record in the database
-                                _dataService.SaveItemAsync(tubular);
+                                _dataService.SaveItem(tubular);
                             }
                         }
                     }
@@ -93,7 +93,7 @@ namespace OilfieldCalc2.ViewModels
                             tubular.InsideDiameter.Convert(value);
 
                             //update the record in the database
-                            _dataService.SaveItemAsync(tubular);
+                            _dataService.SaveItem(tubular);
                         }
                     }
                 }
@@ -144,11 +144,11 @@ namespace OilfieldCalc2.ViewModels
             Title = "Settings";
         }
 
-        public override async void OnNavigatedTo(INavigationParameters parameters)
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
 
-            DrillstringTubulars = new List<DrillstringTubularBase>(await _dataService.GetTubularItemsAsync<DrillstringTubularBase>());
+            DrillstringTubulars = new List<DrillstringTubularBase>(_dataService.GetTubularItems<DrillstringTubularBase>());
 
             LongLengthUnits = GetUnitsOfMeasure.LongLengthUnits();
             ShortLengthUnits = GetUnitsOfMeasure.ShortLengthUnits();

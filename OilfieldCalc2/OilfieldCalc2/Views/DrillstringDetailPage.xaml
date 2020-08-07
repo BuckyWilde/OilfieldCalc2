@@ -11,6 +11,7 @@
              xmlns:customControl="clr-namespace:OilfieldCalc2.CustomControls"
              xmlns:viewTemplate="clr-namespace:OilfieldCalc2.Views"
              Title="{Binding Title}"
+             Visual="Material"
              x:Class="OilfieldCalc2.Views.DrillstringDetailPage">
 
     <ContentPage.Resources>

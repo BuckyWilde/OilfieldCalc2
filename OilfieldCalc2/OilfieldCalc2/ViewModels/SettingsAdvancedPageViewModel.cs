@@ -31,19 +31,16 @@ namespace OilfieldCalc2.ViewModels
 
             OnClearDatabaseCommand = new DelegateCommand(ClearDatabase);
         }
-
+        
         private void ClearDatabase()
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                if (await _pageDialogservice.DisplayAlertAsync("Warning",
+            if (_pageDialogservice.DisplayAlertAsync("Warning",
                     "You are about to detroy all wellbore AND drillstring data! Press OK to procede",
-                    "Ok", "Cancel").ConfigureAwait(false))
+                    "Ok", "Cancel").Result)
                 {
-                    await _dataService.ClearTable<DrillstringTubularBase>().ConfigureAwait(false);
-                    await _dataService.ClearTable<WellboreTubularBase>().ConfigureAwait(false);
-                }
-            });
+                    _dataService.ClearTable<DrillstringTubularBase>();
+                    _dataService.ClearTable<WellboreTubularBase>();
+            }
         }
     }
 }

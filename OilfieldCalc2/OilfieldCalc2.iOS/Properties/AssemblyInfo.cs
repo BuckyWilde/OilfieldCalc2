@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OilfieldCalc2.iOS")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Oilfield Calculator 2")]
+[assembly: AssemblyDescription("Oilfield and well control calculator")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Buck Wilde Enterprises")]
 [assembly: AssemblyProduct("OilfieldCalc2.iOS")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

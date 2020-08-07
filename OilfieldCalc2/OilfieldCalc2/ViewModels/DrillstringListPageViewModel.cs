@@ -25,7 +25,15 @@ namespace OilfieldCalc2.ViewModels
         private INavigationService _navigationService;
         private IPageDialogService _pageDialogservice;
 
-#region Properties
+        #region Properties
+        //public bool IsRefreshing { get; set; }
+        private bool _isRefreshing;
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
+
         private ObservableCollection<ITubular> _drillstringTubulars;
         public ObservableCollection<ITubular> DrillstringTubulars
         {
@@ -180,13 +188,13 @@ namespace OilfieldCalc2.ViewModels
             _pageDialogservice = pageDialogService;
 
             //Initialize commands
-            OnDeleteCommand = new DelegateCommand<object>(DeleteAsync);
-            OnEditCommand = new DelegateCommand<object>(EditAsync);
+            OnDeleteCommand = new DelegateCommand<object>(Delete);
+            OnEditCommand = new DelegateCommand<object>(Edit);
             OnUpCommand = new DelegateCommand<object>(OnUp, CanMoveUp);
             OnDownCommand = new DelegateCommand<object>(OnDown, CanMoveDown);
             OnItemTappedCommand = new DelegateCommand<object>(ItemTappedCommand);
             OnBitOnBottomToggledCommand = new DelegateCommand(BitOnBottomToggled);
-            OnBitDepthChangedCommand = new DelegateCommand(BitDepthChangedAsync);
+            OnBitDepthChangedCommand = new DelegateCommand(BitDepthChanged);
         }
 
 #region Command methods
@@ -217,7 +225,7 @@ namespace OilfieldCalc2.ViewModels
         /// accordingly, possibly the next tubulars in line as well depending
         /// on the user entered value.
         /// </summary>
-        private async void BitDepthChangedAsync()
+        private void BitDepthChanged()
         {
             //if (GetTotalTublarLength() != TotalTubularLength)
             //{
@@ -254,8 +262,7 @@ namespace OilfieldCalc2.ViewModels
 
             //    await SaveTubularsAsync();
 
-            //TODO: delete the Task.Completed Line
-            await Task.CompletedTask.ConfigureAwait(false);
+            
             //}
         }
 
@@ -274,7 +281,7 @@ namespace OilfieldCalc2.ViewModels
             
         }
 
-        private async void EditAsync(object param)
+        private async void Edit(object param)
         {
             IDrillstringTubular dst = param as IDrillstringTubular;
             var navigationParams = new NavigationParameters();
@@ -282,12 +289,12 @@ namespace OilfieldCalc2.ViewModels
             await _navigationService.NavigateAsync(nameof(DrillstringDetailPage), navigationParams).ConfigureAwait(false);
         }
 
-        private async void DeleteAsync(object param)
+        private void Delete(object param)
         {
             if (param is IDrillstringTubular dst)
             {
                 DrillstringTubulars.Remove(dst);   //remove the item from the collection
-                await _dataService.DeleteItemAsync(dst).ConfigureAwait(false); //Delete the record from the database
+                _dataService.DeleteItem(dst); //Delete the record from the database
             }
 
             //Recalculate to compensate for the deleted item
@@ -306,7 +313,7 @@ namespace OilfieldCalc2.ViewModels
             OnUpCommand.RaiseCanExecuteChanged();
             OnDownCommand.RaiseCanExecuteChanged();
 
-            BitDepthChangedAsync();
+            BitDepthChanged();
         }
 
         private void OnUp(object param)
@@ -354,15 +361,14 @@ namespace OilfieldCalc2.ViewModels
         }
 #endregion Command methods
 
-        public override async void OnNavigatedTo(INavigationParameters parameters)
+        public async override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedToAsync(parameters);
-            bool answer = false;
+            IsRefreshing = true;
             bool corrupted = false;
 
             //Load the drillstring Tubulars from the dataservice.
-            DrillstringTubulars = new ObservableCollection<ITubular>(
-                await _dataService.GetTubularItemsAsync<DrillstringTubularBase>().ConfigureAwait(false));
+            DrillstringTubulars = new ObservableCollection<ITubular>(_dataService.GetTubularItems<DrillstringTubularBase>());
 
             //check database for null values
             foreach (DrillstringTubularBase dst in DrillstringTubulars)
@@ -379,26 +385,23 @@ namespace OilfieldCalc2.ViewModels
 
             if (corrupted)
             {
-                Device.BeginInvokeOnMainThread(async () =>
+                var answer = await _pageDialogservice.DisplayAlertAsync("Warning", "Database appears to be corrupt. Attempting to repair", "Ok", "Cancel");
+                if (!answer)
+                    await _navigationService.NavigateAsync(nameof(MainPage)).ConfigureAwait(false);
+                if (answer)
                 {
-                    answer = await _pageDialogservice.DisplayAlertAsync("Warning", "Database appears to be corrupt. Attempting to repair", "Ok", "Cancel").ConfigureAwait(false);
-                    if (!answer)
-                        Device.BeginInvokeOnMainThread(async () => await _navigationService.NavigateAsync(nameof(MainPage)).ConfigureAwait(false));
-                    if (answer)
-                    {
-                        bool repaired = await _dataService.RepairTable<DrillstringTubularBase>().ConfigureAwait(false);
-                        
-                        if (!repaired)
-                            await _dataService.ClearTable<DrillstringTubularBase>().ConfigureAwait(false);
+                    bool repaired = _dataService.RepairTable<DrillstringTubularBase>();
 
-                        //re-initialize properties after changes.
-                        DrillstringTubulars = new ObservableCollection<ITubular>(await _dataService.GetTubularItemsAsync<DrillstringTubularBase>().ConfigureAwait(false));
-                        TotalTubularLength = GetTotalTublarLength();
-                        TotalVolume = GetTotalInternalVolume();
-                        TotalDisplacement = GetTotalDryDisplacement();
-                        TotalWeight = GetTotalWeight();
-                    }
-                });
+                    if (!repaired)
+                        _dataService.ClearTable<DrillstringTubularBase>();
+
+                    //re-initialize properties after changes.
+                    DrillstringTubulars = new ObservableCollection<ITubular>(_dataService.GetTubularItems<DrillstringTubularBase>());
+                    TotalTubularLength = GetTotalTublarLength();
+                    TotalVolume = GetTotalInternalVolume();
+                    TotalDisplacement = GetTotalDryDisplacement();
+                    TotalWeight = GetTotalWeight();
+                }
             }
 
             //Initialize single item properties to 0 because nothing will be selected when first loaded
@@ -423,6 +426,8 @@ namespace OilfieldCalc2.ViewModels
             TotalVolume = GetTotalInternalVolume();
             TotalDisplacement = GetTotalDryDisplacement();
             TotalWeight = GetTotalWeight();
+
+            IsRefreshing = false;
         }
 
         private double GetTotalTublarLength()
@@ -489,12 +494,12 @@ namespace OilfieldCalc2.ViewModels
             return totalWeight;
         }
 
-        private async void ItemizeSortOrder()
+        private void ItemizeSortOrder()
         {
             foreach (IDrillstringTubular tubular in DrillstringTubulars)
             {
                 tubular.ItemSortOrder = DrillstringTubulars.IndexOf(tubular) + 1;
-                await _dataService.SaveItemAsync(tubular).ConfigureAwait(false);
+                _dataService.SaveItem(tubular);
             }
 
             OnUpCommand.RaiseCanExecuteChanged();
