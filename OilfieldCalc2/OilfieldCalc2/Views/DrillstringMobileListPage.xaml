@@ -11,8 +11,9 @@
              x:Name="ListPage"
              xmlns:viewmodels="clr-namespace:OilfieldCalc2.ViewModels"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="OilfieldCalc2.Views.DrillstringMobileListPage"
              Visual="Material"
+             x:Class="OilfieldCalc2.Views.DrillstringMobileListPage"
+             
              Title="{Binding Title}">
 
     <ContentPage.Resources>
@@ -98,7 +99,7 @@
                             <DataTemplate>
                                 <Expander x:Name="expanderCard">
                                     <Expander.Header>
-                                            <Grid ColumnDefinitions="*, Auto" HeightRequest="40">
+                                            <Grid ColumnDefinitions="*, Auto, Auto" HeightRequest="40">
                                                 <StackLayout Orientation="Horizontal" 
                                                              Grid.Column="0">
                                                 <Label FontAttributes="Bold"
@@ -135,14 +136,13 @@
                                                         </MultiBinding>
                                                     </Label.Text>
                                                 </Label>
-                                                <!--<StackLayout Orientation="Horizontal" 
+                                                <StackLayout Orientation="Horizontal" 
                                                              HorizontalOptions="End"
                                                              VerticalOptions="Start"
                                                              Grid.Column="2">
-                                                    -->
+                                                    
                                                 <!--Sort order buttons go here-->
-                                                <!--
-                                                    <Button FontFamily="{StaticResource MaterialFontFamily}"
+                                                <Button FontFamily="{StaticResource MaterialFontFamily}"
                                                             Text="{StaticResource UpArrowIcon}"
                                                             BackgroundColor="White"
                                                             TextColor="Black"
@@ -152,8 +152,8 @@
                                                             HorizontalOptions="End"
                                                             Command="{Binding BindingContext.OnUpCommand, Source={x:Reference ListPage}}"
                                                             CommandParameter="{Binding .}"/>
-
-                                                    <Button FontFamily="{StaticResource MaterialFontFamily}"
+                                                    
+                                                <Button FontFamily="{StaticResource MaterialFontFamily}"
                                                             Text="{StaticResource DownArrowIcon}"
                                                             WidthRequest="30"
                                                             HeightRequest="30"
@@ -161,19 +161,7 @@
                                                             HorizontalOptions="End"
                                                             Command="{Binding BindingContext.OnDownCommand, Source={x:Reference ListPage}}"
                                                             CommandParameter="{Binding .}"/>
-                                                    <ContentView>
-                                                        <OnPlatform x:TypeArguments="View">
-                                                            <On Platform="UWP">
-                                                                <Button WidthRequest="30"
-                                                                        HeightRequest="30"
-                                                                        VerticalOptions="Center"
-                                                                        HorizontalOptions="End"
-                                                                        Text="..."
-                                                                        Command="{Binding BindingContext.OnContextMenuToggleCommand, Source={x:Reference ListPage}}" />
-                                                            </On>
-                                                        </OnPlatform>
-                                                    </ContentView>
-                                                </StackLayout>-->
+                                            </StackLayout>
                                             </Grid>
                                         </Expander.Header>
                                             <StackLayout Padding="10, 0, 0, 10">

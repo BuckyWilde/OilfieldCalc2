@@ -240,11 +240,18 @@ namespace OilfieldCalc2.ViewModels
                 return false;
         }
 
+        /// <summary>
+        /// Navigate to the DrillstringDetailPage and pass in the
+        /// currently selected DrillstringTubular for editting
+        /// </summary>
         private async void Edit()
         {
-            var navigationParams = new NavigationParameters();
-           // navigationParams.Add("drillstringTubular", dst);
-            await _navigationService.NavigateAsync(nameof(DrillstringDetailPage), navigationParams).ConfigureAwait(false);
+            if (SelectedItem is IDrillstringTubular dst)
+            {
+                var navigationParams = new NavigationParameters();
+                navigationParams.Add("drillstringTubular", dst);
+                await _navigationService.NavigateAsync(nameof(DrillstringDetailPage), navigationParams).ConfigureAwait(false);
+            }
         }
 
         private bool CanDelete()
@@ -257,11 +264,11 @@ namespace OilfieldCalc2.ViewModels
 
         private void Delete()
         {
-            //if (param is IDrillstringTubular dst)
-            //{
-            //    DrillstringTubulars.Remove(dst);   //remove the item from the collection
-            //    _dataService.DeleteItem(dst); //Delete the record from the database
-            //}
+            if (SelectedItem is IDrillstringTubular dst)
+            {
+                DrillstringTubulars.Remove(dst);   //remove the item from the collection
+                _dataService.DeleteItem(dst); //Delete the record from the database
+            }
 
             //Recalculate to compensate for the deleted item
             TotalTubularLength = GetTotalTublarLength();
