@@ -26,12 +26,23 @@ namespace OilfieldCalc2.ViewModels
         private IPageDialogService _pageDialogservice;
 
         #region Properties
-        //public bool IsRefreshing { get; set; }
         private bool _isRefreshing;
         public bool IsRefreshing
         {
             get => _isRefreshing;
             set => SetProperty(ref _isRefreshing, value);
+        }
+
+        private IDrillstringTubular _selectedItem;
+        public IDrillstringTubular SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                SetProperty(ref _selectedItem, value);
+                OnDeleteCommand.RaiseCanExecuteChanged();
+                OnEditCommand.RaiseCanExecuteChanged();
+            }
         }
 
         private ObservableCollection<ITubular> _drillstringTubulars;
@@ -71,46 +82,6 @@ namespace OilfieldCalc2.ViewModels
         {
             get => 0.00;//GetWellDepth();
             set => SetProperty(ref _totalWellDepth, value);
-        }
-
-        //selected item length
-        private double _currentItemLength;
-        public double CurrentItemLength
-        {
-            get => _currentItemLength;
-            set => SetProperty(ref _currentItemLength, value);
-        }
-
-        //selected item capacity per meter
-        private double _currentItemCapacity;
-        public double CurrentItemCapacity
-        {
-            get => _currentItemCapacity;
-            set => SetProperty(ref _currentItemCapacity, value);
-        }
-
-        //selected item total internal capacity
-        private double _currentItemVolume;
-        public double CurrentItemVolume
-        {
-            get => _currentItemVolume;
-            set => SetProperty(ref _currentItemVolume, value);
-        }
-
-        //selected item dry displacement per meter
-        private double _currentItemDisplacement;
-        public double CurrentItemDisplacement
-        {
-            get => _currentItemDisplacement;
-            set => SetProperty(ref _currentItemDisplacement, value);
-        }
-
-        //selected item total dry displacement
-        private double _currentItemTotalDisplacement;
-        public double CurrentItemTotalDisplacement
-        {
-            get => _currentItemTotalDisplacement;
-            set => SetProperty(ref _currentItemTotalDisplacement, value);
         }
 
         //Total weight of the tubulars
@@ -171,8 +142,8 @@ namespace OilfieldCalc2.ViewModels
         }
 #endregion Properties
 
-        public DelegateCommand<object> OnDeleteCommand { get; private set; }
-        public DelegateCommand<object> OnEditCommand { get; private set; }
+        public DelegateCommand OnDeleteCommand { get; private set; }
+        public DelegateCommand OnEditCommand { get; private set; }
         public DelegateCommand<object> OnUpCommand { get; private set; }
         public DelegateCommand<object> OnDownCommand { get; private set; }
         public DelegateCommand<object> OnItemTappedCommand { get; private set; }
@@ -188,35 +159,15 @@ namespace OilfieldCalc2.ViewModels
             _pageDialogservice = pageDialogService;
 
             //Initialize commands
-            OnDeleteCommand = new DelegateCommand<object>(Delete);
-            OnEditCommand = new DelegateCommand<object>(Edit);
+            OnDeleteCommand = new DelegateCommand(Delete, CanDelete);
+            OnEditCommand = new DelegateCommand(Edit, CanEdit);
             OnUpCommand = new DelegateCommand<object>(OnUp, CanMoveUp);
             OnDownCommand = new DelegateCommand<object>(OnDown, CanMoveDown);
-            OnItemTappedCommand = new DelegateCommand<object>(ItemTappedCommand);
             OnBitOnBottomToggledCommand = new DelegateCommand(BitOnBottomToggled);
-            OnBitDepthChangedCommand = new DelegateCommand(BitDepthChanged);
+            OnBitDepthChangedCommand = new DelegateCommand(BitDepthChanged);            
         }
 
-#region Command methods
-        /// <summary>
-        /// This command is only to update the PER ITEMS properties
-        /// The item length property is for the UI to display the length, item capacity & item volume
-        /// of the selected item on the screen, usually in the header or footer area
-        /// </summary>
-        /// <param name="param">DrillStringTubular item</param>
-        private void ItemTappedCommand(object param)
-        {
-            if (param is IDrillstringTubular dst)
-            {
-                CurrentItemLength = dst.Length.Value;
-
-                CurrentItemCapacity = dst.InternalCapacityPerUnit;
-                CurrentItemVolume = dst.TotalInternalCapacity;
-                CurrentItemDisplacement = dst.DryDisplacementPerUnit;
-                CurrentItemTotalDisplacement = dst.TotalDryDisplacement;
-            }
-        }
-
+#region Command methods        
         /// <summary>
         /// This command will active every time the user changes the bit depth
         /// entry. The total drillstring length will need to match this number
@@ -281,35 +232,43 @@ namespace OilfieldCalc2.ViewModels
             
         }
 
-        private async void Edit(object param)
+        private bool CanEdit()
         {
-            IDrillstringTubular dst = param as IDrillstringTubular;
+            if (SelectedItem != null)
+                return true;
+            else
+                return false;
+        }
+
+        private async void Edit()
+        {
             var navigationParams = new NavigationParameters();
-            navigationParams.Add("drillstringTubular", dst);
+           // navigationParams.Add("drillstringTubular", dst);
             await _navigationService.NavigateAsync(nameof(DrillstringDetailPage), navigationParams).ConfigureAwait(false);
         }
 
-        private void Delete(object param)
+        private bool CanDelete()
         {
-            if (param is IDrillstringTubular dst)
-            {
-                DrillstringTubulars.Remove(dst);   //remove the item from the collection
-                _dataService.DeleteItem(dst); //Delete the record from the database
-            }
+            if (SelectedItem != null)
+                return true;
+            else
+                return false;
+        }
+
+        private void Delete()
+        {
+            //if (param is IDrillstringTubular dst)
+            //{
+            //    DrillstringTubulars.Remove(dst);   //remove the item from the collection
+            //    _dataService.DeleteItem(dst); //Delete the record from the database
+            //}
 
             //Recalculate to compensate for the deleted item
             TotalTubularLength = GetTotalTublarLength();
             TotalDisplacement = GetTotalDryDisplacement();
             TotalWeight = GetTotalWeight();
             TotalVolume = GetTotalInternalVolume();
-
-            //Clear the selected item vlues
-            CurrentItemLength = 0;
-            CurrentItemCapacity = 0;
-            CurrentItemVolume = 0;
-            CurrentItemDisplacement = 0;
-            CurrentItemTotalDisplacement = 0;
-
+           
             OnUpCommand.RaiseCanExecuteChanged();
             OnDownCommand.RaiseCanExecuteChanged();
 
@@ -367,10 +326,15 @@ namespace OilfieldCalc2.ViewModels
             IsRefreshing = true;
             bool corrupted = false;
 
+            //Make sure these reinitialize to false when returning to this screen...
+            SelectedItem = null;
+            OnDeleteCommand.RaiseCanExecuteChanged();
+            OnEditCommand.RaiseCanExecuteChanged();
+
             //Load the drillstring Tubulars from the dataservice.
             DrillstringTubulars = new ObservableCollection<ITubular>(_dataService.GetTubularItems<DrillstringTubularBase>());
 
-            //check database for null values
+            //check database for null values or other coruptness
             foreach (DrillstringTubularBase dst in DrillstringTubulars)
             {
                 if (dst.LengthBlobbed == null ||
@@ -403,13 +367,6 @@ namespace OilfieldCalc2.ViewModels
                     TotalWeight = GetTotalWeight();
                 }
             }
-
-            //Initialize single item properties to 0 because nothing will be selected when first loaded
-            CurrentItemLength = 0.00;
-            CurrentItemCapacity = 0.00;
-            CurrentItemVolume = 0.00;
-            CurrentItemDisplacement = 0.00;
-            CurrentItemTotalDisplacement = 0.00;
 
             //get state of bit on bottom toggle from preferences
             BitOnBottomToggle = Preferences.Get("BitOnBottomToggle", false);

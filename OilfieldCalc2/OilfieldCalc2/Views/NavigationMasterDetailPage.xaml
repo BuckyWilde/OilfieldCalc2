@@ -8,6 +8,7 @@
                   xmlns:models="clr-namespace:OilfieldCalc2.Models"
                   MasterBehavior="Popover"
                   x:Name="myMenuPage"
+                  Visual="Material"
                   x:Class="OilfieldCalc2.Views.NavigationMasterDetailPage">
     
     <MasterDetailPage.Resources>

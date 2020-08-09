@@ -5,6 +5,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:viewTemplate="clr-namespace:OilfieldCalc2.Views"
              x:Class="OilfieldCalc2.Views.SettingsAboutPage"
+             Visual="Material"
              Title="{Binding Title}">
     
     <viewTemplate:ViewPageTemplate>

@@ -8,6 +8,7 @@
              xmlns:viewTemplate="clr-namespace:OilfieldCalc2.Views"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Name="ListPage"
+             Visual="Material"
              x:Class="OilfieldCalc2.Views.WellboreListPage"
              Title="{Binding Title}" >
 

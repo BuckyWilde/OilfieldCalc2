@@ -5,6 +5,7 @@
             xmlns:local="clr-namespace:OilfieldCalc2.Views"
             prism:ViewModelLocator.AutowireViewModel="True"
             x:Class="OilfieldCalc2.Views.AppSettingsPage"
+            Visual="Material"
             BackgroundColor="#e8e8e8">
     <local:SettingsUnitPage/>
     <local:SettingsAdvancedPage/>

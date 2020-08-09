@@ -6,6 +6,7 @@
              mc:Ignorable="d"
              BackgroundColor="#e8e8e8"
              Padding="20,10,20,10"
+             Visual="Material"
              x:Class="OilfieldCalc2.Views.ViewPageTemplate">
   <ContentView.Content>
         <Grid>

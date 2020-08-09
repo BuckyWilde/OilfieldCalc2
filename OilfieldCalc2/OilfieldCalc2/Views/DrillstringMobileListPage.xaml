@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:prismNav="clr-namespace:Prism.Navigation.Xaml;assembly=Prism.Forms"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:behave="clr-namespace:OilfieldCalc2.Behaviors"
              xmlns:models="clr-namespace:OilfieldCalc2.Models.DrillstringTubulars"
              xmlns:viewTemplate="clr-namespace:OilfieldCalc2.Views"
              xmlns:converters="clr-namespace:OilfieldCalc2.Converters"
@@ -29,6 +30,24 @@
                 <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
                                  Glyph="{StaticResource PlusIcon}"
                                  Color="Black" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+        <ToolbarItem Command="{Binding OnEditCommand}"
+                     Text="Edit"
+                     Order="Primary">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+                                 Glyph="{StaticResource EditIcon}"
+                                 Color="Black"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+        <ToolbarItem Command="{Binding OnDeleteCommand}"
+                     Text="Remove"
+                     Order="Primary">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="{StaticResource MaterialFontFamily}"
+                                 Glyph="{StaticResource TrashIcon}"
+                                 Color="Black"/>
             </ToolbarItem.IconImageSource>
         </ToolbarItem>
     </ContentPage.ToolbarItems>
@@ -72,53 +91,93 @@
         <viewTemplate:ViewPageTemplate.Body>
             <StackLayout Orientation="Vertical">
                 <RefreshView IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}">
-                    <CollectionView ItemsSource="{Binding DrillstringTubulars}">
+                    <CollectionView ItemsSource="{Binding DrillstringTubulars}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedItem}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Expander x:Name="expanderCard">
                                     <Expander.Header>
-                                        <Grid ColumnDefinitions="*, *" HeightRequest="50">
-                                            <StackLayout Orientation="Horizontal" Grid.Column="0">
+                                            <Grid ColumnDefinitions="*, Auto" HeightRequest="40">
+                                                <StackLayout Orientation="Horizontal" 
+                                                             Grid.Column="0">
                                                 <Label FontAttributes="Bold"
-                                                       FontSize="Medium"
-                                                       Text="{Binding Path=ItemDescription}" />
+                                                           FontSize="Medium"
+                                                           Text="{Binding Path=ItemDescription}"/>
                                                 <!--Display this next label on UWP only-->
-                                                <ContentView>
-                                                    <OnPlatform x:TypeArguments="View">
-                                                        <On Platform="UWP">
-                                                            <Label FontAttributes="Bold"
+                                                    <ContentView>
+                                                        <OnPlatform x:TypeArguments="View">
+                                                            <On Platform="UWP">
+                                                                <Label FontAttributes="Bold"
                                                                    FontSize="Medium"
                                                                    IsVisible="{Binding Source={x:Reference expanderCard}, Path=IsExpanded, Converter={StaticResource invertBool}}">
-                                                                <Label.Text>
-                                                                    <MultiBinding StringFormat="{}{0:F2}{1}">
-                                                                        <Binding Path="OutsideDiameter.Value" />
-                                                                        <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:DrillstringListPageViewModel}}"
-                                                                                 Path="ShortLengthUnit.Abreviation" />
-                                                                    </MultiBinding>
-                                                                </Label.Text>
-                                                            </Label>
-                                                        </On>
-                                                    </OnPlatform>
-                                                </ContentView>
-                                            </StackLayout>
-                                            <Label Grid.Column="1"
-                                                   HorizontalTextAlignment="End"
-                                                   FontAttributes="Bold"
-                                                   FontSize="Medium">
-                                                <Label.Text>
-                                                    <MultiBinding StringFormat="{}{0:F2} {1}">
-                                                        <Binding Path="Length.Value" />
-                                                        <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:DrillstringListPageViewModel}}"
-                                                                 Path="LongLengthUnit.Abreviation" />
-                                                    </MultiBinding>
-                                                </Label.Text>
-                                            </Label>
-                                        </Grid>
-                                    </Expander.Header>
-                                    <Grid Padding="10"
-                                          ColumnDefinitions="Auto">
-                                        <StackLayout Grid.Column="0">
-                                            <Label>
+                                                                    <Label.Text>
+                                                                        <MultiBinding StringFormat="{}{0:F2}{1}">
+                                                                            <Binding Path="OutsideDiameter.Value" />
+                                                                            <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:DrillstringListPageViewModel}}"
+                                                                                     Path="ShortLengthUnit.Abreviation" />
+                                                                        </MultiBinding>
+                                                                    </Label.Text>
+                                                                </Label>
+                                                            </On>
+                                                        </OnPlatform>
+                                                    </ContentView>
+                                                </StackLayout>
+                                                <Label Grid.Column="1"
+                                                       HorizontalTextAlignment="End"
+                                                       FontAttributes="Bold"
+                                                       FontSize="Medium">
+                                                    <Label.Text>
+                                                        <MultiBinding StringFormat="{}{0:F2} {1}">
+                                                            <Binding Path="Length.Value" />
+                                                            <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:DrillstringListPageViewModel}}"
+                                                                     Path="LongLengthUnit.Abreviation" />
+                                                        </MultiBinding>
+                                                    </Label.Text>
+                                                </Label>
+                                                <!--<StackLayout Orientation="Horizontal" 
+                                                             HorizontalOptions="End"
+                                                             VerticalOptions="Start"
+                                                             Grid.Column="2">
+                                                    -->
+                                                <!--Sort order buttons go here-->
+                                                <!--
+                                                    <Button FontFamily="{StaticResource MaterialFontFamily}"
+                                                            Text="{StaticResource UpArrowIcon}"
+                                                            BackgroundColor="White"
+                                                            TextColor="Black"
+                                                            WidthRequest="30"
+                                                            HeightRequest="30"
+                                                            VerticalOptions="Center"
+                                                            HorizontalOptions="End"
+                                                            Command="{Binding BindingContext.OnUpCommand, Source={x:Reference ListPage}}"
+                                                            CommandParameter="{Binding .}"/>
+
+                                                    <Button FontFamily="{StaticResource MaterialFontFamily}"
+                                                            Text="{StaticResource DownArrowIcon}"
+                                                            WidthRequest="30"
+                                                            HeightRequest="30"
+                                                            VerticalOptions="Center"
+                                                            HorizontalOptions="End"
+                                                            Command="{Binding BindingContext.OnDownCommand, Source={x:Reference ListPage}}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <ContentView>
+                                                        <OnPlatform x:TypeArguments="View">
+                                                            <On Platform="UWP">
+                                                                <Button WidthRequest="30"
+                                                                        HeightRequest="30"
+                                                                        VerticalOptions="Center"
+                                                                        HorizontalOptions="End"
+                                                                        Text="..."
+                                                                        Command="{Binding BindingContext.OnContextMenuToggleCommand, Source={x:Reference ListPage}}" />
+                                                            </On>
+                                                        </OnPlatform>
+                                                    </ContentView>
+                                                </StackLayout>-->
+                                            </Grid>
+                                        </Expander.Header>
+                                            <StackLayout Padding="10, 0, 0, 10">
+                                                <Label>
                                                 <Label.Text>
                                                     <MultiBinding StringFormat="Outside Diameter: {0:F2} {1}">
                                                         <Binding Path="OutsideDiameter.Value" />
@@ -191,8 +250,8 @@
                                                 </Label.Text>
                                             </Label>
                                         </StackLayout>
-                                    </Grid>
-                                </Expander>
+                                    </Expander>
+                                <!--</SwipeView>-->
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
