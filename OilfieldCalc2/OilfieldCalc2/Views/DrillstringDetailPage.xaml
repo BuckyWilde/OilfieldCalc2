@@ -72,7 +72,7 @@
             <StackLayout Orientation="Vertical">
                 <Picker Title="Item Description"
                         ItemsSource="{Binding ItemDescriptionTypes}"
-                        SelectedIndex="{Binding SelectedTubularType, Converter={StaticResource IntEnum}}">
+                        SelectedIndex="{Binding SelectedTubularType, Converter={StaticResource IntEnum}, Mode=TwoWay}">
                 </Picker>
                 <Label Text="Item Length"/>
                 <customControl:HighlightedEntry Text="{Binding TubularLength.Value, Converter={StaticResource StringToDouble}}">
@@ -102,7 +102,11 @@
         </viewTemplate:ViewPageTemplate.Body>
 
         <viewTemplate:ViewPageTemplate.Footer>
-            <StackLayout>
+            <StackLayout HorizontalOptions="Fill">
+                <!--Error Message Label-->
+                <Label Text="{Binding ValidationResults}"
+                       HorizontalOptions="FillAndExpand"
+                       TextColor="Red" />
             </StackLayout>
         </viewTemplate:ViewPageTemplate.Footer>
     </viewTemplate:ViewPageTemplate>

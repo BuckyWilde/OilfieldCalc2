@@ -21,11 +21,11 @@ namespace OilfieldCalc2.ViewModels
 {
     public class DrillstringListPageViewModel : ViewModelBase
     {
-        private IDataService _dataService;
-        private INavigationService _navigationService;
-        private IPageDialogService _pageDialogservice;
+        private readonly IDataService _dataService;
+        private readonly INavigationService _navigationService;
+        private readonly IPageDialogService _pageDialogservice;
 
-        #region Properties
+        #region Properties        
         private bool _isRefreshing;
         public bool IsRefreshing
         {
@@ -60,7 +60,7 @@ namespace OilfieldCalc2.ViewModels
             set => SetProperty(ref _totalDisplacement, value);
         }
 
-        //total volume capacity of all the tubulars
+        //total internal volume capacity of all the tubulars
         private double _totalVolume;
         public double TotalVolume
         {
@@ -80,30 +80,24 @@ namespace OilfieldCalc2.ViewModels
         private double _totalWellDepth;
         public double TotalWellDepth
         {
-            get => 0.00;//GetWellDepth();
+            get => _totalWellDepth;
             set => SetProperty(ref _totalWellDepth, value);
         }
 
-        //Total weight of the tubulars
+        //Total weight of the tubulars (weight of the steel in air)
         private double _totalWeight;
         public double TotalWeight
         {
-            get => GetTotalWeight();
+            get => _totalWeight;
             set => SetProperty(ref _totalWeight, value);
         }
 
         //State of the bitOnBottom toggle switch
         private bool _bitOnBottomToggle;
-
         public bool BitOnBottomToggle
         {
             get => _bitOnBottomToggle;
-            set
-            {
-                SetProperty(ref _bitOnBottomToggle, value);
-                //RaisePropertyChanged(nameof(TotalTubularLength));
-                TotalTubularLength = GetTotalTublarLength();
-            }
+            set => SetProperty(ref _bitOnBottomToggle, value);                
         }
 
         private UnitOfMeasure _shortLengthUnit;
@@ -140,16 +134,16 @@ namespace OilfieldCalc2.ViewModels
             get => _massUnit;
             set => SetProperty(ref _massUnit, value);
         }
-#endregion Properties
+        #endregion Properties
 
-        public DelegateCommand OnDeleteCommand { get; private set; }
-        public DelegateCommand OnEditCommand { get; private set; }
-        public DelegateCommand<object> OnUpCommand { get; private set; }
-        public DelegateCommand<object> OnDownCommand { get; private set; }
-        public DelegateCommand<object> OnItemTappedCommand { get; private set; }
-        public DelegateCommand OnBitOnBottomToggledCommand { get; private set; }
-        public DelegateCommand OnBitDepthChangedCommand { get; private set; }
-        
+        public DelegateCommand OnDeleteCommand { get; }
+        public DelegateCommand OnEditCommand { get; }
+        public DelegateCommand<object> OnUpCommand { get; }
+        public DelegateCommand<object> OnDownCommand { get; }
+        public DelegateCommand<object> OnItemTappedCommand { get; }
+        public DelegateCommand OnBitOnBottomToggledCommand { get; }
+        public DelegateCommand OnBitDepthChangedCommand { get; }
+
         public DrillstringListPageViewModel(INavigationService navigationService, IDataService dataService, IPageDialogService pageDialogService) : base(navigationService)
         {
             Title = "Drillstring List Page";
@@ -211,9 +205,9 @@ namespace OilfieldCalc2.ViewModels
             //    RaisePropertyChanged(nameof(TotalVolume));
             //    RaisePropertyChanged(nameof(TotalWeight));
 
-            //    await SaveTubularsAsync();
+            //    SaveTubulars();
 
-            
+
             //}
         }
 
@@ -234,10 +228,7 @@ namespace OilfieldCalc2.ViewModels
 
         private bool CanEdit()
         {
-            if (SelectedItem != null)
-                return true;
-            else
-                return false;
+            return SelectedItem != null;
         }
 
         /// <summary>
@@ -256,10 +247,7 @@ namespace OilfieldCalc2.ViewModels
 
         private bool CanDelete()
         {
-            if (SelectedItem != null)
-                return true;
-            else
-                return false;
+            return SelectedItem != null;
         }
 
         private void Delete()

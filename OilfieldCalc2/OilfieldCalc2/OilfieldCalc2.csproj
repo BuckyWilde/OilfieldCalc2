@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="9.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
@@ -25,6 +26,9 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Constants.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\DrillstringListPage.xaml.cs">
+      <DependentUpon>DrillstringListPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\SettingsUnitPage.xaml.cs">
       <DependentUpon>SettingsUnitPage.xaml</DependentUpon>
@@ -43,9 +47,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\DrillstringListPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\DrillstringMobileListPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\NavigationMasterDetailPage.xaml">

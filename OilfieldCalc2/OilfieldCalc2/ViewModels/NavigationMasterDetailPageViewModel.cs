@@ -75,7 +75,7 @@ namespace OilfieldCalc2.ViewModels
             MenuItems.Add(new MyMenuItem()
             {
                 Icon = (string)Application.Current.Resources["MoreIcon"],
-                PageName = nameof(DrillstringMobileListPage),
+                PageName = nameof(DrillstringListPage),
                 Title = "Drill String",
                 IsEnabled = true
             });

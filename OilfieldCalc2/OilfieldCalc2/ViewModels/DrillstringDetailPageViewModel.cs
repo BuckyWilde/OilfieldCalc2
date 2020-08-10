@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using OilfieldCalc2.Models.MeasureableUnit;
 using OilfieldCalc2.Services;
+using OilfieldCalc2.Models.Validators;
+using FluentValidation.Results;
 
 namespace OilfieldCalc2.ViewModels
 {
@@ -67,6 +69,20 @@ namespace OilfieldCalc2.ViewModels
             set => SetProperty(ref _tubularAdjustedWeight, value);
         }
 
+        private DrillstringTubularValidator _validator;
+        public DrillstringTubularValidator Validator
+        {
+            get => _validator;
+            set => SetProperty(ref _validator, value);
+        }
+
+        private ValidationResult _validationResults;
+        public ValidationResult ValidationResults
+        {
+            get => _validationResults;
+            set => SetProperty(ref _validationResults, value);
+        }
+
         public int ItemSortOrder { get; set; }
 
         public DelegateCommand OnSaveCommand { get; private set; }
@@ -79,7 +95,9 @@ namespace OilfieldCalc2.ViewModels
             _navigationService = navigationService;
             _dataService = dataservice;
             
-            OnSaveCommand = new DelegateCommand(SaveTubularAsync, CanSave);
+            OnSaveCommand = new DelegateCommand(SaveTubular, CanSave);
+
+            Validator = new DrillstringTubularValidator();
 
             //initialize properties
             ItemDescriptionTypes = new List<string>();
@@ -96,13 +114,14 @@ namespace OilfieldCalc2.ViewModels
         /// on the value of "SelectedTubularType" which will default to 0 if none
         /// is selected
         /// </summary>
-        private async void SaveTubularAsync()
+        private async void SaveTubular()
         {
             IDrillstringTubular pipe = null;
             string ns = typeof(DrillstringTubularBase).Namespace;
             string typeName = ns + "." + SelectedTubularType.ToString();
             if (typeName != null)
             {
+                //Defaults to DrillPipe is nothing is selected in the Dropdown list for tubular type
                 pipe = (IDrillstringTubular)Activator.CreateInstance(Type.GetType(typeName));
             }
 
@@ -114,7 +133,10 @@ namespace OilfieldCalc2.ViewModels
             pipe.InsideDiameter = new Measurement(TubularID.Value, MeasurementUnitService.GetCurrentShortLengthUnit());
             pipe.AdjustedWeightPerUnit = new Measurement(TubularAdjustedWeight.Value, MeasurementUnitService.GetCurrentMassUnit());
 
-            if (pipe != null)
+            System.Diagnostics.Debug.WriteLine("Value of Selected type = " + SelectedTubularType.ToString());
+            ValidationResults = Validator.Validate(pipe);
+
+            if (pipe != null && ValidationResults.IsValid)
             {
                 _dataService.SaveItem((DrillstringTubularBase)pipe);
 
