@@ -106,6 +106,7 @@
                 <!--Error Message Label-->
                 <Label Text="{Binding ValidationResults}"
                        HorizontalOptions="FillAndExpand"
+                       FontAttributes="Bold"
                        TextColor="Red" />
             </StackLayout>
         </viewTemplate:ViewPageTemplate.Footer>

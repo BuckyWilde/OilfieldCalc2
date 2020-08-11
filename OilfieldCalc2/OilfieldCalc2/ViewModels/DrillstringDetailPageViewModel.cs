@@ -17,8 +17,8 @@ namespace OilfieldCalc2.ViewModels
 {
     public class DrillstringDetailPageViewModel : ViewModelBase
     {
-        private IDataService _dataService;
-        private INavigationService _navigationService;
+        private readonly IDataService _dataService;
+        private readonly INavigationService _navigationService;
 
         private int _itemId;
         public int ItemId
@@ -133,7 +133,6 @@ namespace OilfieldCalc2.ViewModels
             pipe.InsideDiameter = new Measurement(TubularID.Value, MeasurementUnitService.GetCurrentShortLengthUnit());
             pipe.AdjustedWeightPerUnit = new Measurement(TubularAdjustedWeight.Value, MeasurementUnitService.GetCurrentMassUnit());
 
-            System.Diagnostics.Debug.WriteLine("Value of Selected type = " + SelectedTubularType.ToString());
             ValidationResults = Validator.Validate(pipe);
 
             if (pipe != null && ValidationResults.IsValid)

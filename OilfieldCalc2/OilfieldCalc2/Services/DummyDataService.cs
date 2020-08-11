@@ -63,13 +63,13 @@ namespace OilfieldCalc2.Services
             var wbt = (IWellboreTubular)new Tubular().Create(WellboreTubularType.Casing);
             var wbt2 = (IWellboreTubular)new Tubular().Create(WellboreTubularType.OpenHole);
 
-            wbt.StartDepth = 0;
-            wbt.EndDepth = 524;
+            wbt.StartDepth = new Measurement(0d * MeasurementUnitService.GetCurrentShortLengthUnit().ConversionFactor, MeasurementUnitService.GetCurrentShortLengthUnit());
+            wbt.EndDepth = new Measurement(524d * MeasurementUnitService.GetCurrentShortLengthUnit().ConversionFactor, MeasurementUnitService.GetCurrentShortLengthUnit());
             wbt.InsideDiameter = new Measurement(224.4d * MeasurementUnitService.GetCurrentShortLengthUnit().ConversionFactor, MeasurementUnitService.GetCurrentShortLengthUnit());
             tubularList.Add(wbt);
 
-            wbt2.StartDepth = 524;
-            wbt2.EndDepth = 5120;
+            wbt2.StartDepth = new Measurement(524d * MeasurementUnitService.GetCurrentShortLengthUnit().ConversionFactor, MeasurementUnitService.GetCurrentShortLengthUnit());
+            wbt2.EndDepth = new Measurement(5124d * MeasurementUnitService.GetCurrentShortLengthUnit().ConversionFactor, MeasurementUnitService.GetCurrentShortLengthUnit());
             wbt2.InsideDiameter = new Measurement(211d * MeasurementUnitService.GetCurrentShortLengthUnit().ConversionFactor, MeasurementUnitService.GetCurrentShortLengthUnit());
             tubularList.Add(wbt2);
 

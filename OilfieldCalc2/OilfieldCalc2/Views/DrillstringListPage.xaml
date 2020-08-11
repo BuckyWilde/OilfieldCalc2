@@ -122,7 +122,8 @@
                 <RefreshView IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}">
                     <CollectionView ItemsSource="{Binding DrillstringTubulars}"
                                     SelectionMode="Single"
-                                    SelectedItem="{Binding SelectedItem}">
+                                    SelectedItem="{Binding SelectedItem}"
+                                    EmptyView="No Data to display">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Expander x:Name="expanderCard">
@@ -258,7 +259,6 @@
                                             </Label>
                                         </StackLayout>
                                     </Expander>
-                                <!--</SwipeView>-->
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>

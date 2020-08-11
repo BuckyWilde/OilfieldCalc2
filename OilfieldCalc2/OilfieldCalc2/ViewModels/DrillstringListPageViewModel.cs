@@ -140,7 +140,6 @@ namespace OilfieldCalc2.ViewModels
         public DelegateCommand OnEditCommand { get; }
         public DelegateCommand<object> OnUpCommand { get; }
         public DelegateCommand<object> OnDownCommand { get; }
-        public DelegateCommand<object> OnItemTappedCommand { get; }
         public DelegateCommand OnBitOnBottomToggledCommand { get; }
         public DelegateCommand OnBitDepthChangedCommand { get; }
 

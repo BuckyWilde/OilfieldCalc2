@@ -28,8 +28,7 @@ namespace OilfieldCalc2.Services
         /// </summary>
         public DataService()
         {
-            Initialize<DrillstringTubularBase>();
-            Initialize<WellboreTubularBase>();
+            Initialize<DrillstringTubularBase, WellboreTubularBase>();
         }
 
         /// <summary>
@@ -37,13 +36,19 @@ namespace OilfieldCalc2.Services
         /// </summary>
         /// <typeparam name="T">Generic representing a database table</typeparam>
         /// <returns></returns>
-        private void Initialize<T>()
+        private void Initialize<T, TT>()
         {
             if (!initialized)
             {
                 if (!database.TableMappings.Any(m => m.MappedType.Name == typeof(T).Name))
                 {
                     database.CreateTables(CreateFlags.None, typeof(T));
+                    initialized = true;
+                }
+
+                if (!database.TableMappings.Any(m => m.MappedType.Name == typeof(TT).Name))
+                {
+                    database.CreateTables(CreateFlags.None, typeof(TT));
                     initialized = true;
                 }
             }

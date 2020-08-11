@@ -10,7 +10,7 @@ namespace OilfieldCalc2.Models.Validators
     {
         public DrillstringTubularValidator()
         {
-            RuleFor(x => x.ItemDescription).NotNull().Length(10, 20);
+            RuleFor(x => x.ItemDescription).NotNull().Length(4, 20);
             RuleFor(x => x.Length.Value).GreaterThan(0)
                 .WithMessage("Length must be greater than 0");
             RuleFor(x => x.Length).NotNull()

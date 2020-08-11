@@ -172,7 +172,7 @@ namespace OilfieldCalc2.Models.DrillstringTubulars
         
         public int CompareTo(object obj)
         {
-            if (obj == null) 
+            if (obj == null)
                 return 1;
 
             IDrillstringTubular otherTubular = obj as IDrillstringTubular;
