@@ -4,11 +4,8 @@ using System;
 using OilfieldCalc2.Helpers;
 using OilfieldCalc2.Models;
 using OilfieldCalc2.Models.DrillstringTubulars;
-using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Xaml;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using OilfieldCalc2.Models.MeasureableUnit;
@@ -30,6 +27,13 @@ namespace OilfieldCalc2.ViewModels
         {
             get => _itemId;
             set => SetProperty(ref _itemId, value);
+        }
+
+        private int _washoutFactor;
+        public int WashoutFactor
+        {
+            get => _washoutFactor;
+            set => SetProperty(ref _washoutFactor, value);
         }
 
         private List<string> _itemDescriptionTypes;
@@ -67,6 +71,13 @@ namespace OilfieldCalc2.ViewModels
             set => SetProperty(ref _tubularID, value);
         }
 
+        private bool _washoutSliderIsVisibile;
+        public bool WashoutSliderIsVisible
+        {
+            get => _washoutSliderIsVisibile;
+            set => SetProperty(ref _washoutSliderIsVisibile, value);
+        }
+
         private WellboreTubularValidator _validator;
         public WellboreTubularValidator Validator
         {
@@ -83,7 +94,8 @@ namespace OilfieldCalc2.ViewModels
 
         public int ItemSortOrder { get; set; }
 
-        public DelegateCommand OnSaveCommand { get; private set; }
+        public DelegateCommand OnSaveCommand { get; }
+        public DelegateCommand OnTypeSelectionChangedCommand { get; }
 
         public WellboreDetailPageViewModel(IDataService dataService, INavigationService navigationService)
             : base(navigationService)
@@ -94,14 +106,31 @@ namespace OilfieldCalc2.ViewModels
             Title = "Wellbore Detail Page";
 
             OnSaveCommand = new DelegateCommand(SaveTubular, CanSave);
+            OnTypeSelectionChangedCommand = new DelegateCommand(TypeSelectionChanged);
 
             Validator = new WellboreTubularValidator();
 
+            //Initialize values
             ItemDescriptionTypes = new List<string>();
+            WashoutFactor = 0;
             StartDepth = new Measurement(0, MeasurementUnitService.GetCurrentLongLengthUnit());
             EndDepth = new Measurement(0, MeasurementUnitService.GetCurrentShortLengthUnit());
             TubularID = new Measurement(0, MeasurementUnitService.GetCurrentShortLengthUnit());
             SelectedTubularType = new WellboreTubularType();
+            WashoutSliderIsVisible = false;
+        }
+
+        private void TypeSelectionChanged()
+        {
+            if (SelectedTubularType == WellboreTubularType.OpenHole)
+            {
+                WashoutSliderIsVisible = true;
+            }
+            else
+            {
+                WashoutSliderIsVisible = false;
+                WashoutFactor = 0;
+            }
         }
 
         /// <summary>
@@ -123,6 +152,7 @@ namespace OilfieldCalc2.ViewModels
 
             //Populate the properties of the newly created instance with data from the UI form.
             wbt.ItemId = ItemId;
+            wbt.WashoutFactor = WashoutFactor;
             wbt.ItemSortOrder = ItemSortOrder;
             wbt.StartDepth = new Measurement(StartDepth.Value, MeasurementUnitService.GetCurrentLongLengthUnit());
             wbt.EndDepth = new Measurement(EndDepth.Value, MeasurementUnitService.GetCurrentShortLengthUnit());
@@ -161,6 +191,7 @@ namespace OilfieldCalc2.ViewModels
                     //Load the values into the appropriate properties
                     
                     ItemId = wellboreTubular.ItemId;
+                    WashoutFactor = wellboreTubular.WashoutFactor;
                     ItemSortOrder = wellboreTubular.ItemSortOrder;
                     SelectedTubularType = wellboreTubular.TubularType;
                     StartDepth = wellboreTubular.StartDepth;

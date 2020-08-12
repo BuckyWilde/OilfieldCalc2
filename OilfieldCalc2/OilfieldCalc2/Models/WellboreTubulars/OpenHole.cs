@@ -10,6 +10,8 @@ namespace OilfieldCalc2.Models.WellboreTubulars
     {
         public override string ItemDescription => "Open Hole";
 
+        public override int WashoutFactor { get; set; }
+
         public override WellboreTubularType TubularType => WellboreTubularType.OpenHole;
     }
 }

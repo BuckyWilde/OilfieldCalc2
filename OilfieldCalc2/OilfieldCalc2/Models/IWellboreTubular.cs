@@ -12,5 +12,6 @@ namespace OilfieldCalc2.Models
         Measurement StartDepth { get; set; }
         Measurement EndDepth { get; set; }
         double Length { get; }
+        int WashoutFactor { get; set; }
     }
 }

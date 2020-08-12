@@ -18,6 +18,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:InverseBoolConverter x:Key="invertBool" />
+            <converters:IntToBoolConverter x:Key="intToBool" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -149,6 +150,14 @@
                                                     <Binding Path="TotalInternalCapacity" />
                                                     <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:WellboreListPageViewModel}}"
                                                              Path="VolumeUnit.Abreviation" />
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                        <Label IsVisible="{Binding WashoutFactor, Converter={StaticResource intToBool}}">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="Washout Factor: {0} %">
+                                                    <Binding Path="WashoutFactor" />
+                                                    <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:WellboreListPageViewModel}}" />
                                                 </MultiBinding>
                                             </Label.Text>
                                         </Label>

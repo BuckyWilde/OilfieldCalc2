@@ -16,6 +16,7 @@ namespace OilfieldCalc2.Models.WellboreTubulars
         [PrimaryKey, AutoIncrement]
         public int ItemId { get; set; }
         public int ItemSortOrder { get; set; }
+        public virtual int WashoutFactor { get; set; } = 0;
         public virtual string ItemDescription { get; set; }
         public virtual WellboreTubularType TubularType { get; set; }
 

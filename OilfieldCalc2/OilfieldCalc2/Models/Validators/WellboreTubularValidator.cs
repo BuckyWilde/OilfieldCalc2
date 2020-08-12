@@ -10,6 +10,8 @@ namespace OilfieldCalc2.Models.Validators
         public WellboreTubularValidator()
         {
             RuleFor(x => x.ItemDescription).NotNull().Length(4, 20);
+            RuleFor(x => x.WashoutFactor).InclusiveBetween(0, 100)
+                .WithMessage("Washout value must be from 0 to 100");
             RuleFor(x => x.StartDepth.Value).GreaterThanOrEqualTo(0)
                 .WithMessage("Start Depth must be non negative");
             RuleFor(x => x.StartDepth).NotNull();            

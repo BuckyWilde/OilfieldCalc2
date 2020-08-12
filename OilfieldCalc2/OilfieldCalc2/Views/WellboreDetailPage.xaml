@@ -73,6 +73,10 @@
                 <Picker Title="Item Description"
                         ItemsSource="{Binding ItemDescriptionTypes}"
                         SelectedIndex="{Binding SelectedTubularType, Converter={StaticResource IntEnum}, Mode=TwoWay}">
+                    <Picker.Behaviors>
+                        <b:EventToCommandBehavior Command="{Binding OnTypeSelectionChangedCommand}"
+                                                  EventName="SelectedIndexChanged" />
+                    </Picker.Behaviors>
                 </Picker>
                 <Label Text="Start Depth"/>
                 <customControl:HighlightedEntry Text="{Binding StartDepth.Value, Converter={StaticResource StringToDouble}}">
@@ -92,6 +96,32 @@
                         <behaviors:NumericValidationBehavior/>
                     </Entry.Behaviors>
                 </customControl:HighlightedEntry>
+                <StackLayout Orientation="Vertical"
+                             IsVisible="{Binding WashoutSliderIsVisible}">
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Washout Factor "
+                           VerticalOptions="Center"/>
+                        <customControl:HighlightedEntry Text="{Binding WashoutFactor}"
+                                                        HorizontalOptions="FillAndExpand"
+                                                        Margin="50,0,0,0"
+                                                        ClearButtonVisibility="Never"
+                                                        MaxLength="3"                                                    
+                                                        FontAttributes="Bold"
+                                                        IsEnabled="false"
+                                                        FontSize="Large">
+                            <Entry.Behaviors>
+                                <behaviors:NumericValidationBehavior/>
+                            </Entry.Behaviors>
+                        </customControl:HighlightedEntry>
+                    </StackLayout>
+                    <Slider Minimum="0" 
+                            Maximum="100" 
+                            x:Name="washoutSlider" 
+                            HorizontalOptions="Fill" 
+                            Value="{Binding WashoutFactor}"
+                            MinimumTrackColor="DarkGray"
+                            MaximumTrackColor="Goldenrod"/>
+                </StackLayout>
             </StackLayout>
         </viewTemplate:ViewPageTemplate.Body>
 
